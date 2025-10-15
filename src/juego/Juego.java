@@ -3,6 +3,7 @@ package juego;
 
 import java.awt.Color;
 
+
 import entorno.Entorno;
 import entorno.InterfaceJuego;
 
@@ -12,7 +13,7 @@ public class Juego extends InterfaceJuego
 	private Entorno entorno;
 	
 	// Variables y métodos propios de cada grupo
-	// ...
+	private Tablero miTablero;
 	
 	Juego()
 	{
@@ -20,7 +21,7 @@ public class Juego extends InterfaceJuego
 		this.entorno = new Entorno(this, "Proyecto para TP", 800, 600);
 		
 		// Inicializar lo que haga falta para el juego
-		// ...
+		this.miTablero = new Tablero (entorno);
 
 		// Inicia el juego!
 		this.entorno.iniciar();
@@ -35,8 +36,8 @@ public class Juego extends InterfaceJuego
 	public void tick()
 	{
 		// Procesamiento de un instante de tiempo
-		// ...
-		
+		this.miTablero.dibujarTablero();
+		this.miTablero.dibujarRegalos();
 	}
 	
 
