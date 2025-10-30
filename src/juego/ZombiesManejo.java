@@ -4,6 +4,7 @@ import entorno.Entorno;
 public class ZombiesManejo {
 
 	private static int max_zombies = 50;
+	private ZombieGrinch jefeFinalEnManejo;
 	private ZombieGrinch [] zombiesEnJuego;
 
 	// --- 1. LÓGICA DE TIEMPO "MÍA" (LA QUE QUERÍAS CONSERVAR) ---
@@ -23,6 +24,7 @@ public class ZombiesManejo {
 	
 	public ZombiesManejo (Tablero tablero) {
 		this.tablero = tablero;
+		this.jefeFinalEnManejo = null; // Inicializar a null
 		this.zombiesEnJuego = new ZombieGrinch [max_zombies];
 		this.proyectiles = new ProyectilZombie[MAX_PROYECTILES];
 		this.zombiesMuertos = 0;
@@ -54,16 +56,6 @@ public class ZombiesManejo {
 				}
 			}
 		}
-
-		// 2. GENERAR NUEVOS ZOMBIES (Lógica de tiempo "MÍA")
-		// Comprueba si ya pasó el tiempo programado
-		if (entorno.tiempo() >= this.tiempoProximoZombie) {
-			this.generarZombie(this.tablero); // Usa tu método de generar
-
-			// Programa el siguiente spawn
-			this.tiempoProximoZombie = entorno.tiempo() + TIEMPO_ENTRE_ZOMBIES;
-		}
-		// -------------------------------------------------
 
 		// 3. MOVER PROYECTILES (Lógica "TUYA" conservada)
 		for (int i = 0; i < this.proyectiles.length; i++) {
@@ -123,13 +115,28 @@ public class ZombiesManejo {
 	}
 	
 	public ZombieGrinch generarJefeFinal(Tablero tablero) {
-		// Fila 2 (la del medio) para más drama
-		int filaJefe = 2; 
-		double y = tablero.getCentroCasilla(filaJefe, 0)[1];
+		// La coordenada Y ahora estará en el centro vertical del área de juego del tablero
+		// El alto del área de juego es 'entorno.alto - tablero.getMenuHeight()'
+		double yCentroAreaJuego = tablero.getMenuHeight() + (tablero.getLargoCasilla() * tablero.getFilas() / 2.0);
+		
+		// La posición X seguirá siendo un poco fuera de pantalla
 		double x = 850.0;
 		
-		// Vida: 300, Velocidad: 0.10, Escala: 0.25, Hitbox: 100x150
-		ZombieGrinch jefe = new ZombieGrinch(x, y, 0.10, 100, "ZombieNormal.png", 100.0, 150.0, 0.25, 999999);
+		// Calcular el alto de la zona de juego para que el jefe la abarque
+		double altoZonaJuego = tablero.getLargo_pantalla() - tablero.getMenuHeight();
+
+		// Nombre de la nueva imagen para el jefe final (¡debes crearla!)
+		String imagenJefe = "ZombieFinall.png"; // <-- ¡CAMBIA ESTO AL NOMBRE DE TU IMAGEN!
+		
+		// Ajustar las dimensiones y escala para que se vea grande y ocupe el alto.
+		// La escala se ajustará para que el alto de la imagen sea similar al 'altoZonaJuego'.
+		// Usaremos un alto base y un ancho base para la hitbox y ajustaremos la escala para el dibujo.
+		double anchoBaseHitbox = 100.0; 
+		double altoBaseHitbox = altoZonaJuego; // El alto de la hitbox es todo el alto del área de juego
+		double escalaDibujo = 0.5; // Ajusta este valor si tu imagen "BossZombie.png" es muy grande o muy pequeña inicialmente.
+
+		// Vida: 300, Velocidad: 0.10, Retraso de disparo: 999999 (muy lento o no dispara)
+		ZombieGrinch jefe = new ZombieGrinch(x, yCentroAreaJuego, 0.10, 300, imagenJefe, anchoBaseHitbox, altoBaseHitbox, escalaDibujo, 999999);
 		
 		this.agregarZombie(jefe);
 		return jefe; // Devuelve la instancia del jefe
@@ -164,19 +171,28 @@ public class ZombiesManejo {
 			this.proyectiles[indice] = null;
 		}
 	}
+	
+	public void setJefeFinal(ZombieGrinch jefe) { // <-- ¡AÑADE ESTE MÉTODO!
+	    this.jefeFinalEnManejo = jefe;
+	}
 
 	// Tus métodos de estado
 	public int getTotalAsesinados() { return this.zombiesMuertos; }
 
-    public boolean hayZombieEnFila(double yFila, double limiteX) {
+	public boolean hayZombieEnFila(double yFila, double limiteX) {
         for (int i = 0; i < this.zombiesEnJuego.length; i++) {
 	        ZombieGrinch z = this.zombiesEnJuego[i];
-	        if (z != null && z.estaVivo() && z.getY() == yFila) {
-	            if (z.getX() <= limiteX) {
-	            	return true;
+	        if (z != null && z.estaVivo()) { // Quitamos la condición de yFila de aquí
+                // Si el zombie actual es el jefe final Y está dentro del límite X
+                if (this.jefeFinalEnManejo != null && z == this.jefeFinalEnManejo && z.getX() <= limiteX) {
+                    return true; // El jefe está presente y es una amenaza
+                }
+                // Si es un zombie normal y está en la fila y dentro del límite X
+                else if (z != this.jefeFinalEnManejo && z.getY() == yFila && z.getX() <= limiteX) {
+	            	return true; // Un zombie normal en esta fila es una amenaza
 	            }
 	        }
         }
-    return false;
-}
+        return false;
+    }
 }

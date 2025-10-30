@@ -85,6 +85,7 @@ public class Juego extends InterfaceJuego {
             this.jefeFinal = this.movZombies.generarJefeFinal(this.miTablero);
             this.jefeHaAparecido = true;
             this.movZombies.detenerSpawns(); // Detiene los spawns normales
+            this.movZombies.setJefeFinal(this.jefeFinal);
         }
         
         // B. Nueva condición de victoria: El jefe apareció Y está muerto

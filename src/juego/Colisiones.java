@@ -38,7 +38,7 @@ public class Colisiones {
                         // Si era una bomba, explota
                         if (p.getNombre().equals("Rose-Bomba")) {
                             // ¡CAMBIO ACÁ! Pasamos 'movZombies' en lugar de 'zombies'
-                            this.explotar(p.getFila(), p.getCol(), movZombies, tumbas, tablero);
+                        	this.explotar(p.getFila(), p.getCol(), movZombies, tumbas, tablero, jefeFinal);
                         }
                         
                         movPlantas.removerPlanta(j); // Se remueve la planta
@@ -115,7 +115,7 @@ public class Colisiones {
                     	
                     	if (p.getNombre().equals("Rose-Bomba")) {
                             // ¡CAMBIO ACÁ! Pasamos 'movZombies' en lugar de 'zombies'
-                            this.explotar(p.getFila(), p.getCol(), movZombies, tumbas, tablero);
+                    		this.explotar(p.getFila(), p.getCol(), movZombies, tumbas, tablero, jefeFinal);
                         }
                     	
                         movPlantas.removerPlanta(j);
@@ -150,7 +150,7 @@ public class Colisiones {
     // --- MÉTODO EXPLOTAR (CORREGIDO) ---
  // Archivo: Colisiones.java
 
-    private void explotar(int filaCentro, int colCentro, ZombiesManejo movZombies, Tumba[] tumbas, Tablero tablero) {
+    private void explotar(int filaCentro, int colCentro, ZombiesManejo movZombies, Tumba[] tumbas, Tablero tablero, ZombieGrinch jefeFinal) {
             
         // Itera en un cuadrado de 3x3 alrededor del centro
         for (int f = filaCentro - 1; f <= filaCentro + 1; f++) {
@@ -177,6 +177,11 @@ public class Colisiones {
                 ZombieGrinch[] zombies = movZombies.getZombies(); // Obtenemos el array
                 for (int i = 0; i < zombies.length; i++) { // Bucle por índice 'i'
                     ZombieGrinch z = zombies[i];
+                    
+                    if (z != null && z == jefeFinal) {
+                        continue; // No le aplica daño de explosión
+                    }
+                    
                     if (z != null && z.estaVivo()) {
                         // Si el zombie está tocando esta casilla del 3x3...
                         if (z.estaTocando(xCasilla, yCasilla, anchoCasilla, altoCasilla)) {

@@ -12,7 +12,7 @@ public class Tablero {
 	private double ancho_pantalla = 800.0;
 	private double largo_pantalla = 600.0;
 	private double menu = 125.0;
-	private double largoYMenu = largo_pantalla - menu;
+	private double largoYMenu = getLargo_pantalla() - menu;
 	private int filas = 5;
 	private int columnas = 10;
 	
@@ -23,9 +23,9 @@ public class Tablero {
 	
 	public void dibujarTablero() {
 		double ancho_casilla = this.ancho_pantalla / this.columnas;
-		double largo_casilla = this.largoYMenu / this.filas;
+		double largo_casilla = this.largoYMenu / this.getFilas();
 		
-		for (int i = 0;i < this.filas; i++) {
+		for (int i = 0;i < this.getFilas(); i++) {
 			for (int j = 0; j < this.columnas; j++) {
 				double medioX = (j * ancho_casilla) + (ancho_casilla /2.0);
 				double medioY = this.menu + (i * largo_casilla) + (largo_casilla / 2.0);
@@ -45,11 +45,11 @@ public class Tablero {
 	
 	public void dibujarRegalos() {
 		double ancho_casilla = this.ancho_pantalla / this.columnas;
-		double largo_casilla = this.largoYMenu / this.filas;
+		double largo_casilla = this.largoYMenu / this.getFilas();
 		double cuadrad = 60.0;
 		
 		
-		for (int i = 0; i < this.filas; i++) {
+		for (int i = 0; i < this.getFilas(); i++) {
 			double medioX = ancho_casilla / 2;
 			double medioY = this.menu + (i * largo_casilla) + (largo_casilla / 2);
 			
@@ -59,14 +59,14 @@ public class Tablero {
 	
 	public double getMenuHeight() { return this.menu; }
 	public double getAnchoCasilla() { return this.ancho_pantalla / this.columnas; }
-	public double getLargoCasilla() { return this.largoYMenu / this.filas; }
+	public double getLargoCasilla() { return this.largoYMenu / this.getFilas(); }
 	
 	/**
 	 * Devuelve true si las coordenadas del mouse están dentro 
 	 * de los límites del tablero (no en el menú).
 	 */
 	public boolean estaEnTablero(int mx, int my) {
-		return my >= this.menu && my <= this.largo_pantalla &&
+		return my >= this.menu && my <= this.getLargo_pantalla() &&
 			   mx >= 0 && mx <= this.ancho_pantalla;
 	}
 	
@@ -89,12 +89,28 @@ public class Tablero {
 	 * casilla dada por [fila, col].
 	 */
 	public double[] getCentroCasilla(int fila, int col) {
-		if (fila < 0 || fila >= this.filas || col < 0 || col >= this.columnas) {
+		if (fila < 0 || fila >= this.getFilas() || col < 0 || col >= this.columnas) {
 			return null;
 		}
 		double x = (col * getAnchoCasilla()) + (getAnchoCasilla() / 2.0);
 		double y = this.menu + (fila * getLargoCasilla()) + (getLargoCasilla() / 2.0);
 		return new double[]{x, y};
+	}
+
+	public double getLargo_pantalla() {
+		return largo_pantalla;
+	}
+
+	public void setLargo_pantalla(double largo_pantalla) {
+		this.largo_pantalla = largo_pantalla;
+	}
+
+	public int getFilas() {
+		return filas;
+	}
+
+	public void setFilas(int filas) {
+		this.filas = filas;
 	}
 
 }
