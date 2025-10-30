@@ -5,10 +5,13 @@ import java.awt.Image;
 import entorno.Entorno;
 import entorno.Herramientas;
 import entorno.InterfaceJuego;
+// ¡Ya no se necesita JOptionPane!
 
 public class Juego extends InterfaceJuego {
     // El objeto Entorno que controla el tiempo y otros
     private Entorno entorno;
+
+    // (Variables de dificultad eliminadas)
 
     // Variables y métodos propios de cada grupo
     private Tablero miTablero;
@@ -39,6 +42,8 @@ public class Juego extends InterfaceJuego {
    // private Image fondo;
 
     Juego() {
+        // (Lógica de JOptionPane eliminada)
+
         // Inicializa el objeto entorno
         this.entorno = new Entorno(this, "Proyecto para TP", 800, 600);
 
@@ -74,7 +79,7 @@ public class Juego extends InterfaceJuego {
 
     public void tick() {
         // --- 1. CHEQUEO DE ESTADO (GANAR/PERDER) ---
-if (!this.jefeHaAparecido && this.movZombies.getTotalAsesinados() >= this.zombiesParaGanar) {
+        if (!this.jefeHaAparecido && this.movZombies.getTotalAsesinados() >= this.zombiesParaGanar) {
             
             // ¡Es hora del jefe!
             this.jefeFinal = this.movZombies.generarJefeFinal(this.miTablero);
@@ -132,15 +137,7 @@ if (!this.jefeHaAparecido && this.movZombies.getTotalAsesinados() >= this.zombie
         }
 
         // --- 3. DIBUJAR EL JUEGO (EN ORDEN CORRECTO) ---
-        // Fondo primero
-       // double centroImag = 400;
-        //double centroImg2 = 300; // Ajusta la Y si es necesario para centrar el fondo
-        //if (this.fondo != null) {
-          //  this.entorno.dibujarImagen(fondo, centroImag, centroImg2, 0);
-        //} else {
-            // entorno.colorFondo(Color.GRAY); // Color de fondo si la imagen falla
-       // }
-
+        // (El código de dibujar no cambia)
 
         // Tablero encima del fondo
         this.miTablero.dibujarTablero();
@@ -181,28 +178,18 @@ if (!this.jefeHaAparecido && this.movZombies.getTotalAsesinados() >= this.zombie
             // 1. Revisa el item PRIMERO
             Item itemClickeado = this.manejoItems.getItemClickeado(mx, my);
 
-            // --- ¡ESTE BLOQUE 'IF' ES EL QUE FALTABA! ---
-            // Debe ir ANTES de revisar la barra de cartas.
             if (itemClickeado != null) {
-                // Si se clickeó un item, aplicamos su efecto
+                // ... (lógica de items sin cambios)
                 this.Barrita.aplicarEfectoItem(itemClickeado.getTipo());
-                
-                // Y lo removemos del juego
                 this.manejoItems.removerItem(itemClickeado);
-                
-                // Importante: deseleccionamos todo lo demás
                 this.cartaSeleccionada = null;
                 this.Barrita.seleccionarCarta(null);
                 if (this.plantaEnMovimiento != null) {
                     this.plantaEnMovimiento.setSeleccionadaParaMover(false);
                     this.plantaEnMovimiento = null;
                 }
-                
-                // Salimos del método para no procesar otros clics (como plantar)
-                return; // <-- Este 'return' es crucial
+                return;
             }
-            // --- FIN DEL BLOQUE FALTANTE ---
-
 
             // 2. Si no fue un item, revisa la barra de cartas
             CartaPlanta cartaClickeada = this.Barrita.getCartaClickeada(mx, my);
@@ -240,6 +227,7 @@ if (!this.jefeHaAparecido && this.movZombies.getTotalAsesinados() >= this.zombie
         }
 
         // B. CUANDO SE SUELTA (Plantar carta nueva)
+        // --- CÓDIGO RESTAURADO (SIN LÍMITE DE DIFICULTAD) ---
         if (this.entorno.seLevantoBoton(entorno.BOTON_IZQUIERDO)) {
             if (this.cartaSeleccionada != null) {
                 int mx = this.entorno.mouseX();
@@ -254,6 +242,7 @@ if (!this.jefeHaAparecido && this.movZombies.getTotalAsesinados() >= this.zombie
                 this.Barrita.seleccionarCarta(null);
             }
         }
+        // --- FIN DEL BLOQUE RESTAURADO ---
     }
 
     private void manejarTeclado() {
