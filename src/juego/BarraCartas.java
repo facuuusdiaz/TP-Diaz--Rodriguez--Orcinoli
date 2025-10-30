@@ -30,16 +30,15 @@ public class BarraCartas {
     }
     
     /**
-     * ¡MODIFICADO!
-     * Ahora no devuelve la carta si está en cooldown O si el límite de plantas fue alcanzado.
+     * ¡RESTAURADO!
+     * Devuelve la carta clickeada solo si está lista (sin chequear el límite).
      */
     public CartaPlanta getCartaClickeada(int mx, int my) {
         for (CartaPlanta carta : this.mazo) {
-            // Chequea si se clickeó, está lista Y NO está bloqueada por el límite
+            // Chequea si se clickeó Y si está lista (cooldown terminado)
             if (carta != null && 
                 carta.estaClickeada(mx, my) && 
-                carta.estaLista && 
-                !carta.estaBloqueadaPorLimite()) { // <-- ¡CONDICIÓN IMPORTANTE!
+                carta.estaLista) {
                 
                 return carta;
             }
@@ -63,15 +62,5 @@ public class BarraCartas {
         }
     }
     
-    // --- ¡NUEVO MÉTODO! ---
-    /**
-     * Actualiza el estado de bloqueo de todas las cartas.
-     */
-    public void actualizarLimiteGlobal(boolean limiteAlcanzado) {
-        for (CartaPlanta carta : this.mazo) {
-            if (carta != null) {
-                carta.setLimiteGlobal(limiteAlcanzado);
-            }
-        }
-    }
+    
 }
