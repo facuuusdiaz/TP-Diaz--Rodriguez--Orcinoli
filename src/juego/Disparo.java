@@ -14,7 +14,7 @@ public class Disparo {
 	public Disparo(double x, double y) {
 		this.x = x + 20; // Nace un poco adelante de la planta
 		this.y = y;
-		this.velocidad = 3.0; // Puedes ajustar esto
+		this.velocidad = 3.0; // Velocidad del disparo
 		
 		this.ancho = 12.0;
 		this.alto = 6.0;

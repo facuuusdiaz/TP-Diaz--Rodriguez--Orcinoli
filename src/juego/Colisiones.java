@@ -12,7 +12,7 @@ public class Colisiones {
         ProyectilZombie[] proyectilesZombies = movZombies.getProyectiles();
         Tumba[] tumbas = manejoTumbas.getTumbas();
 
-        // --- Bucle de Zombies (Secciones 1, 2, 3) ---
+        // Bucle de Zombies
         for (int i = 0; i < zombies.length; i++) {
             ZombieGrinch z = zombies[i];
             if (z == null || !z.estaVivo()) { continue; }
@@ -37,7 +37,6 @@ public class Colisiones {
                         
                         // Si era una bomba, explota
                         if (p.getNombre().equals("Rose-Bomba")) {
-                            // ¡CAMBIO ACÁ! Pasamos 'movZombies' en lugar de 'zombies'
                         	this.explotar(p.getFila(), p.getCol(), movZombies, tumbas, tablero, jefeFinal);
                         }
                         
@@ -59,10 +58,10 @@ public class Colisiones {
                     z.recibirDisparo();
                     movPlantas.removerDisparo(k);
                     
-                    if (z.estaVivo() != true) { // <-- Si el zombie muere...
+                    if (z.estaVivo() != true) { // Si el zombie muere...
                         
                         if (jefeFinal != null && z == jefeFinal) {
-                            // Lógica del Jefe (sin cambios)
+                            // Lógica del Jefe
                             manejoItems.agregarItem(z.getX(), z.getY());
                             manejoItems.agregarItem(z.getX() - 40, z.getY());
                             manejoItems.agregarItem(z.getX() + 40, z.getY());
@@ -70,7 +69,7 @@ public class Colisiones {
                             manejoItems.agregarItem(z.getX(), z.getY() + 40);
                             
                         } else {
-                            // Lógica de Zombie Normal (sin cambios)
+                            // Lógica de Zombie Normal
 	                    	double CHANCE_TUMBA = 0.45; 
 	                        if (Math.random() < CHANCE_TUMBA) {
 	                            int[] casilla = tablero.getCasilla((int)z.getX(), (int)z.getY());
@@ -94,10 +93,10 @@ public class Colisiones {
                     break;
                 }
             }
-        } // --- Fin del bucle FOR de zombies ---
+        } // Fin del bucle FOR de zombies
 
 
-     // --- 4. PROYECTIL (ZOMBIE) VS PLANTA ---
+     // 4. PROYECTIL (ZOMBIE) VS PLANTA
         for (int k = 0; k < proyectilesZombies.length; k++) {
             ProyectilZombie proy = proyectilesZombies[k];
             if (proy == null) { continue; }
@@ -114,7 +113,6 @@ public class Colisiones {
                     if (!p.estaViva()) {
                     	
                     	if (p.getNombre().equals("Rose-Bomba")) {
-                            // ¡CAMBIO ACÁ! Pasamos 'movZombies' en lugar de 'zombies'
                     		this.explotar(p.getFila(), p.getCol(), movZombies, tumbas, tablero, jefeFinal);
                         }
                     	
@@ -125,7 +123,7 @@ public class Colisiones {
             }
         }
 
-        // --- 5. DISPARO (PLANTA) VS TUMBA ---
+        // 5. DISPARO (PLANTA) VS TUMBA
         for (int k = 0; k < disparos.length; k++) {
             Disparo d = disparos[k];
             if (d == null) { continue; }
@@ -147,9 +145,6 @@ public class Colisiones {
         return false; // El juego continúa
     }
     
-    // --- MÉTODO EXPLOTAR (CORREGIDO) ---
- // Archivo: Colisiones.java
-
     private void explotar(int filaCentro, int colCentro, ZombiesManejo movZombies, Tumba[] tumbas, Tablero tablero, ZombieGrinch jefeFinal) {
             
         // Itera en un cuadrado de 3x3 alrededor del centro
@@ -186,17 +181,15 @@ public class Colisiones {
                         // Si el zombie está tocando esta casilla del 3x3...
                         if (z.estaTocando(xCasilla, yCasilla, anchoCasilla, altoCasilla)) {
                             
-                            // --- ¡ESTA ES LA LÍNEA QUE FALTABA! ---
                             // 1. Matamos al zombi (esto pone estaVivo = false)
                             z.recibirDisparo(danoExplosion); 
                             // 2. Lo removemos para que cuente en el score
                             movZombies.removerZombie(i);
-                            // ------------------------------------
                         }
                     }
                 }
                 
-                // 2. Revisa todas las TUMBAS (sin cambios)
+                // 2. Revisa todas las TUMBAS
                 for (Tumba t : tumbas) {
                     if (t != null && t.estaViva()) {
                         if (t.getFila() == f && t.getCol() == c) {

@@ -13,7 +13,7 @@ public class ProyectilZombie {
 	public ProyectilZombie(double x, double y) {
 		this.x = x - 20; // Nace un poco adelante (izquierda) del zombie
 		this.y = y;
-		this.velocidad = -2.0; // ¡Velocidad negativa para ir a la izquierda!
+		this.velocidad = -2.0; // Velocidad negativa para ir a la izquierda
 		this.diametro = 12;
 	}
 	

@@ -30,7 +30,6 @@ public class BarraCartas {
     }
     
     /**
-     * ¡RESTAURADO!
      * Devuelve la carta clickeada solo si está lista (sin chequear el límite).
      */
     public CartaPlanta getCartaClickeada(int mx, int my) {

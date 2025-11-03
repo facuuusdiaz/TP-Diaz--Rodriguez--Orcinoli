@@ -16,8 +16,6 @@ public class CartaPlanta {
     boolean estaLista;
     private Image imgCarta;
     
-    // private boolean limiteGlobalAlcanzado; // <-- ELIMINADO
-
     public CartaPlanta (double x, double y, String nombreCarta) {
         this.x = x;
         this.y = y;
@@ -27,9 +25,8 @@ public class CartaPlanta {
         this.seleccionada = false;
         this.estaLista = true;
         this.tiempoProxDisponible = 0;
-        // this.limiteGlobalAlcanzado = false; // <-- ELIMINADO
 
-        // --- Carga de imágenes (sin cambios) ---
+        // Carga de imágenes
         if (this.nombreCarta.equals("Rose Blade")) {
             this.imgCarta = Herramientas.cargarImagen("RoseBlade.png");
             this.enfriamiento = 4000;
@@ -102,9 +99,6 @@ public class CartaPlanta {
             Color colorRecarga = new Color(40, 40, 40, 200);
             entorno.dibujarRectangulo(this.x, yBarra, this.ancho, alturaBarra, 0, colorRecarga);
         }
-        
-        // 5. ¡Bloque del círculo rojo ELIMINADO!
-        // if (this.limiteGlobalAlcanzado) { ... }
     }
     
     public boolean estaClickeada(int mx, int my) {
@@ -127,8 +121,6 @@ public class CartaPlanta {
         }
     }
     
-    // --- Getters y Setters ---
-    
     public void setSeleccionada(boolean seleccionada) {
         this.seleccionada = seleccionada;
     }
@@ -143,4 +135,3 @@ public class CartaPlanta {
     
    
 }
-

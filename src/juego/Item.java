@@ -1,37 +1,33 @@
 package juego;
 
 import java.awt.Color;
-import java.awt.Image;       // ¡Importar!
+import java.awt.Image;
 import entorno.Entorno;
-import entorno.Herramientas; // ¡Importar!
+import entorno.Herramientas;
 
 public class Item {
     private double x, y;
     private String tipo; // "bueno" o "malo"
     private double radio = 15;
-    private Image imagen; // ¡Variable nueva!
+    private Image imagen; 
 
     public Item(double x, double y, String tipo) {
         this.x = x;
         this.y = y;
         this.tipo = tipo;
 
-        // --- ¡MODIFICADO! ---
         // Cargamos una única imagen para la poción
         // (Así es "sorpresa" si es buena o mala)
-        // ¡Asegurate de que el nombre "pocion.png" sea exacto!
         this.imagen = Herramientas.cargarImagen("pocion.png");
-        // --------------------
     }
 
     public void dibujar(Entorno e) {
-        // --- ¡MODIFICADO! ---
         // Dibujamos la imagen si cargó
         if (this.imagen != null) {
-            // Ajustá la escala (ej: 0.05) si es necesario
+            // Ajustar la escala si es necesario
             e.dibujarImagen(this.imagen, this.x, this.y, 0, 0.15);
         } else {
-            // Fallback: si no carga, dibuja los círculos de colores como antes
+            // Fallback: si no carga, dibuja los círculos de colores
             Color colorBase;
             Color colorBorde;
 
@@ -45,7 +41,6 @@ public class Item {
             e.dibujarCirculo(this.x, this.y, this.radio, colorBase);
             e.dibujarCirculo(this.x, this.y, this.radio, colorBorde);
         }
-        // --------------------
     }
 
     /**

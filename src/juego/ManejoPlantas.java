@@ -15,7 +15,7 @@ public class ManejoPlantas {
         this.disparos = new Disparo[MAX_DISPAROS];
     }
 
-    public void tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal) { // Correcto (2 args)
+    public void tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal) {
         // Pensar en plantas y generar disparos
         for (int i = 0; i < this.plantasEnTablero.length; i++) {
             PlantaColocada planta = this.plantasEnTablero[i];
@@ -59,9 +59,10 @@ public class ManejoPlantas {
     }
 
     /**
-     * CAMBIO: Ahora también recibe manejoTumbas para validar
+     * Planta una carta en el tablero, validando la posición.
+     * Ahora también recibe manejoTumbas para validar.
      */
-    public boolean plantar(CartaPlanta carta, int mx, int my, Tablero tablero, ManejoTumbas manejoTumbas) { // Recibe 5 args
+    public boolean plantar(CartaPlanta carta, int mx, int my, Tablero tablero, ManejoTumbas manejoTumbas) {
         if (tablero.estaEnTablero(mx, my)) {
 
             int[] casilla = tablero.getCasilla(mx, my);
@@ -117,7 +118,6 @@ public class ManejoPlantas {
         return false;
     }
 
-    // --- Método usado por el zombie ---
 	public boolean hayPlantaEnFila(double yFila) {
 	    for (PlantaColocada p : this.plantasEnTablero) {
 	        if (p != null && p.estaViva() && p.getY() == yFila) {
@@ -127,7 +127,6 @@ public class ManejoPlantas {
 	    return false;
 	}
 
-    // --- Getters y Setters para COLISIONES ---
     public PlantaColocada[] getPlantas() { return this.plantasEnTablero; }
     public Disparo[] getDisparos() { return this.disparos; }
 
@@ -144,4 +143,3 @@ public class ManejoPlantas {
     
    
 }
-

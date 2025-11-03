@@ -12,7 +12,7 @@ public class PlantaColocada {
 
     private boolean estaViva;
     private int disparoRetraso = 2000; // En milisegundos para lógica de planta
-    private long proximoDisparo; // Usar long aquí porque viene de entorno.tiempo()
+    private long proximoDisparo; // Usar long porque viene de entorno.tiempo()
 
     private int vida;
     private int vidaMaxima;
@@ -23,7 +23,6 @@ public class PlantaColocada {
     private int col;
     private boolean estaSeleccionadaParaMover;
 
-    // Constructor CORRECTO (5 argumentos)
     public PlantaColocada(double x, double y, int fila, int col, String nombre) {
         this.x = x;
         this.y = y;
@@ -31,7 +30,7 @@ public class PlantaColocada {
         this.col = col;
         this.nombre = nombre;
         this.estaViva = true;
-        this.proximoDisparo = 0; // Se inicializa bien en el primer tick de planta
+        this.proximoDisparo = 0; // Se inicializa en el primer tick
         this.estaSeleccionadaParaMover = false;
 
         if (this.nombre.equals("Rose Blade")) {
@@ -39,12 +38,12 @@ public class PlantaColocada {
             this.vida = 100;
             this.vidaMaxima = 100;
         } else if (this.nombre.equals("Wall-nut")) {
-            this.img = Herramientas.cargarImagen("Wall-nutt.png"); // Asumo 2 't'
+            this.img = Herramientas.cargarImagen("Wall-nutt.png");
             this.vida = 1000;
             this.vidaMaxima = 1000;
         } else if (this.nombre.equals("Rose-Bomba")) {
-            this.img = Herramientas.cargarImagen("Rose-Bombaa.png"); // Re-usar imagen
-            this.vida = 1; // ¡Vida mínima para que explote al primer toque!
+            this.img = Herramientas.cargarImagen("Rose-Bombaa.png");
+            this.vida = 1; // Vida mínima para que explote al primer toque
             this.vidaMaxima = 1;
         } else {
              // Default por si acaso
@@ -54,9 +53,8 @@ public class PlantaColocada {
     }
 
     // Tick de la planta (disparar)
-public Disparo tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal) {
+	public Disparo tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal) {
         
-        // --- ¡ESTA LÍNEA ES LA MÁS IMPORTANTE! ---
         // Se asegura de que SOLO la "Rose Blade" entre en la lógica de disparo.
         if (this.nombre.equals("Rose Blade")) {
              
@@ -67,8 +65,6 @@ public Disparo tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal)
              
              // Si la planta está viva y lista para disparar...
              if (this.estaViva && e.tiempo() >= this.proximoDisparo) {
-                
-                // --- Lógica de amenaza (para disparar al jefe o zombies) ---
                 
                 // 1. Revisa si el jefe final está vivo
                 boolean jefeEstaVivo = (jefeFinal != null && jefeFinal.estaVivo());
@@ -89,7 +85,7 @@ public Disparo tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal)
         return null; 
     }
 
-    // Daño MELEE (mordida) - Correcto sin 'entorno'
+    // Daño MELEE (mordida)
     public void recibirContacto() {
         this.vida--;
         if (this.vida <= 0) {
@@ -131,7 +127,7 @@ public Disparo tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal)
         if (this.img != null) {
             e.dibujarImagen(this.img, this.x, this.y, 0, escala);
         } else {
-             e.dibujarRectangulo(this.x, this.y, 30, 30, 0, Color.MAGENTA); // Dibujo alternativo si falla la imagen
+             e.dibujarRectangulo(this.x, this.y, 30, 30, 0, Color.MAGENTA); // Dibujo alternativo
         }
 
 
@@ -139,7 +135,6 @@ public Disparo tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal)
             Color rojoTransparente = new Color(255, 0, 0, 100);
             e.dibujarCirculo(this.x, this.y, 40, rojoTransparente);
         }
-        // Quitamos el círculo de selección
     }
 
     // Getters y Setters para movimiento y estado
@@ -161,7 +156,7 @@ public Disparo tick(Entorno e, ZombiesManejo movZombies, ZombieGrinch jefeFinal)
     public double getX() { return this.x; }
     public double getY() { return this.y; }
 
-public String getNombre() {
-    return this.nombre;
-}
+	public String getNombre() {
+	    return this.nombre;
+	}
 }

@@ -5,13 +5,10 @@ import java.awt.Image;
 import entorno.Entorno;
 import entorno.Herramientas;
 import entorno.InterfaceJuego;
-// ¡Ya no se necesita JOptionPane!
 
 public class Juego extends InterfaceJuego {
     // El objeto Entorno que controla el tiempo y otros
     private Entorno entorno;
-
-    // (Variables de dificultad eliminadas)
 
     // Variables y métodos propios de cada grupo
     private Tablero miTablero;
@@ -42,8 +39,6 @@ public class Juego extends InterfaceJuego {
    // private Image fondo;
 
     Juego() {
-        // (Lógica de JOptionPane eliminada)
-
         // Inicializa el objeto entorno
         this.entorno = new Entorno(this, "Proyecto para TP", 800, 600);
 
@@ -51,7 +46,7 @@ public class Juego extends InterfaceJuego {
         this.miTablero = new Tablero(entorno);
         this.Barrita = new BarraCartas();
         this.barraZombies = new BarraZombies();
-       // this.fondo = Herramientas.cargarImagen("Tablerooo.jpg"); // Asegúrate que el archivo exista
+       // this.fondo = Herramientas.cargarImagen("Tablerooo.jpg");
 
         this.cartaSeleccionada = null;
         this.plantaEnMovimiento = null;
@@ -78,7 +73,7 @@ public class Juego extends InterfaceJuego {
     }
 
     public void tick() {
-        // --- 1. CHEQUEO DE ESTADO (GANAR/PERDER) ---
+        // 1. CHEQUEO DE ESTADO (GANAR/PERDER)
         if (!this.jefeHaAparecido && this.movZombies.getTotalAsesinados() >= this.zombiesParaGanar) {
             
             // ¡Es hora del jefe!
@@ -88,7 +83,7 @@ public class Juego extends InterfaceJuego {
             this.movZombies.setJefeFinal(this.jefeFinal);
         }
         
-        // B. Nueva condición de victoria: El jefe apareció Y está muerto
+        // Nueva condición de victoria: El jefe apareció Y está muerto
         if (this.jefeHaAparecido && this.jefeFinal != null && !this.jefeFinal.estaVivo()) {
             this.juegoGanado = true;
         }
@@ -105,21 +100,21 @@ public class Juego extends InterfaceJuego {
             return;
         }
 
-        // --- Temporizador Manual ---
+        // Temporizador Manual
         this.contadorTicks++;
         if (this.contadorTicks >= 60) {
             this.segundosJuego++;
             this.contadorTicks = 0;
         }
 
-        // --- 2. LÓGICA DEL JUEGO ---
+        // 2. LÓGICA DEL JUEGO
         this.Barrita.tick(this.entorno); // Actualiza enfriamiento de cartas
         this.manejarMouse(); // Revisa clics del mouse
         this.manejarTeclado(); // Revisa teclas para mover planta
 
         // Actualizar estados internos (movimiento, disparos, generación)
-        this.movZombies.tick(this.entorno, this.miTablero, this.movPlantas); // Correcto (4 args)
-        this.movPlantas.tick(this.entorno, this.movZombies, this.jefeFinal); // Correcto (2 args)
+        this.movZombies.tick(this.entorno, this.miTablero, this.movPlantas);
+        this.movPlantas.tick(this.entorno, this.movZombies, this.jefeFinal);
 
       
         boolean debeTerminar = this.col.verificar(
@@ -137,8 +132,7 @@ public class Juego extends InterfaceJuego {
             this.juegoTerminado = true;
         }
 
-        // --- 3. DIBUJAR EL JUEGO (EN ORDEN CORRECTO) ---
-        // (El código de dibujar no cambia)
+        // 3. DIBUJAR EL JUEGO (EN ORDEN CORRECTO)
 
         // Tablero encima del fondo
         this.miTablero.dibujarTablero();
@@ -180,7 +174,6 @@ public class Juego extends InterfaceJuego {
             Item itemClickeado = this.manejoItems.getItemClickeado(mx, my);
 
             if (itemClickeado != null) {
-                // ... (lógica de items sin cambios)
                 this.Barrita.aplicarEfectoItem(itemClickeado.getTipo());
                 this.manejoItems.removerItem(itemClickeado);
                 this.cartaSeleccionada = null;
@@ -228,7 +221,6 @@ public class Juego extends InterfaceJuego {
         }
 
         // B. CUANDO SE SUELTA (Plantar carta nueva)
-        // --- CÓDIGO RESTAURADO (SIN LÍMITE DE DIFICULTAD) ---
         if (this.entorno.seLevantoBoton(entorno.BOTON_IZQUIERDO)) {
             if (this.cartaSeleccionada != null) {
                 int mx = this.entorno.mouseX();
@@ -243,7 +235,6 @@ public class Juego extends InterfaceJuego {
                 this.Barrita.seleccionarCarta(null);
             }
         }
-        // --- FIN DEL BLOQUE RESTAURADO ---
     }
 
     private void manejarTeclado() {

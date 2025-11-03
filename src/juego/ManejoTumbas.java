@@ -49,11 +49,9 @@ public class ManejoTumbas {
             }
         }
     }
-
  
-
     /**
-     * Devuelve el array completo de tumbas (para Colisiones).
+     * Devuelve la tumba en una casilla específica, o null si no hay.
      */
     public Tumba getTumbaEnCasilla1(int fila, int col) {
         for (Tumba t : this.tumbasEnTablero) {
@@ -63,8 +61,9 @@ public class ManejoTumbas {
         }
         return null;
     }    
+    
     /**
-     * Marca una tumba como eliminada (la pone en null).
+     * Marca una tumba como eliminada (la pone en null) por índice.
      */
     public void removerTumba(int indice) {
          if (indice >= 0 && indice < this.tumbasEnTablero.length) {
@@ -73,7 +72,7 @@ public class ManejoTumbas {
     }
     
     /**
-     * Busca una tumba específica y la remueve. Usado por Colisiones.
+     * Busca una tumba específica y la remueve.
      */
      public void removerTumba(Tumba tumbaARemover) {
         for (int i = 0; i < tumbasEnTablero.length; i++) {

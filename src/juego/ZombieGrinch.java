@@ -19,15 +19,12 @@ public class ZombieGrinch {
 	
 	private Image img;
 
-	// --- ESTAS SON LAS VARIABLES DE TIEMPO QUE CAMBIAMOS ---
 	private int retrasoDisparoEnTicks;
 	private int contadorTicks;
-	// ------------------------------------------------
 
 	
 	/**
-	 * ¡ESTE ES EL CONSTRUCTOR QUE TIENES QUE USAR!
-	 * Asegúrate de que tenga los 9 argumentos.
+	 * Constructor para crear un Zombie.
 	 */
 	public ZombieGrinch(double x, double y, double velocidad, int vida, String nombreImagen, double ancho, double alto, double escala, int retrasoDisparoEnTicks) {
 		this.x = x;	
@@ -42,20 +39,19 @@ public class ZombieGrinch {
 		
 		this.img = Herramientas.cargarImagen(nombreImagen);
 		
-		// --- Asigna el retraso en Ticks ---
 		this.retrasoDisparoEnTicks = retrasoDisparoEnTicks;
 		
-		// Inicia el contador en un número negativo aleatorio
+		// Inicia el contador en un número negativo aleatorio (para desfasar disparos)
 		this.contadorTicks = -(int)(Math.random() * this.retrasoDisparoEnTicks);
 	}
 	
 	/**
-	 * CAMBIO: Este método ahora usa el contador de ticks, no 'e.tiempo()'
+	 * Lógica principal del zombie, se ejecuta en cada tick.
 	 */
 	public ProyectilZombie tick(Entorno e, ManejoPlantas movPlantas) {
 	
 		if (!this.estaVivo()) {
-			return null; // Si estoy muerto, no hago nada (ni me muevo, ni disparo)
+			return null; // Si estoy muerto, no hago nada
 		}
 		
 		// Mover al zombie
@@ -66,7 +62,7 @@ public class ZombieGrinch {
 		// Incrementar el contador en cada tick
 		this.contadorTicks++;
 		
-		// --- CAMBIO EN LA LÓGICA DE DISPARO ---
+		// Lógica de disparo
 		
 		// 1. Revisa si hay una planta en la fila
 		boolean hayPlanta = movPlantas.hayPlantaEnFila(this.y);
@@ -79,7 +75,6 @@ public class ZombieGrinch {
 		if (this.estaAtacando || this.contadorTicks < this.retrasoDisparoEnTicks || !hayPlanta) {
 			return null; // No dispara
 		}
-		// -------------------------------------
 		
 		// ¡Es hora de disparar!
 		this.contadorTicks = 0; // Reinicia el contador de ticks
@@ -136,7 +131,6 @@ public class ZombieGrinch {
 		this.estaAtacando = atacando;
 	}
 	
-	// --- ¡CAMBIO: Añadir este nuevo método! ---
 	/**
 	 * Recibe una cantidad específica de daño (para explosiones).
 	 */

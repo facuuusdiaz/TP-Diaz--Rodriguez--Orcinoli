@@ -19,9 +19,8 @@ public class Tumba {
         this.y = y;
         this.fila = fila;
         this.col = col;
-        this.vida = 15; // Resistencia: necesita 15 disparos para romperse (ajústalo)
+        this.vida = 15; // Resistencia de la tumba
         
-        // ¡Necesitas una imagen "tumba.png" en tu proyecto!
         this.img = Herramientas.cargarImagen("Tumbaa.png"); 
     }
 

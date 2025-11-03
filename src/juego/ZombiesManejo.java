@@ -7,13 +7,9 @@ public class ZombiesManejo {
 	private ZombieGrinch jefeFinalEnManejo;
 	private ZombieGrinch [] zombiesEnJuego;
 
-	// --- 1. LÓGICA DE TIEMPO "MÍA" (LA QUE QUERÍAS CONSERVAR) ---
-	// Usamos un 'static final' para el intervalo
-	private static final int TIEMPO_ENTRE_ZOMBIES = 3000; // 6 segundos entre zombies
-	// 'int' para el tiempo, como en el PDF
+	// Intervalo de tiempo para generar zombies
+	private static final int TIEMPO_ENTRE_ZOMBIES = 3000; // 3 segundos
 	private int tiempoProximoZombie; 
-	// (Se eliminaron 'tiempoInicialJuego' e 'inicializado')
-	// -----------------------------------------------------------
 
 	private int zombiesMuertos;
 	private static int MAX_PROYECTILES = 200;
@@ -29,25 +25,19 @@ public class ZombiesManejo {
 		this.proyectiles = new ProyectilZombie[MAX_PROYECTILES];
 		this.zombiesMuertos = 0;
 
-		// --- 2. INICIALIZACIÓN DE TIEMPO "MÍA" ---
-		// El primer zombie aparece de inmediato (o tras un breve retraso)
+		// El primer zombie aparece a los 5 segundos
 		this.tiempoProximoZombie = 5000; 
-		// (Se eliminó toda la lógica de 'inicializado = false', etc.)
-		// ------------------------------------
 	}
 
 	public void tick (Entorno entorno, Tablero tablero, ManejoPlantas movPlantas) {
 
-		// --- 3. LÓGICA DE 'TICK' "MÍA" ---
-		// (Se eliminó el bloque 'if (!this.inicializado)')
-		// --------------------------------------------------------------
-
+		// Genera un nuevo zombie si ha pasado el tiempo
 		if (entorno.tiempo() >= this.tiempoProximoZombie && !this.spawnsDetenidos) {
 			this.generarZombie(this.tablero); 
 			this.tiempoProximoZombie = entorno.tiempo() + TIEMPO_ENTRE_ZOMBIES;
 		}
 		
-		// 1. Mover zombies y generar disparos (Lógica "TUYA" conservada)
+		// Actualiza el estado de cada zombie y genera sus proyectiles
 		for (int i = 0; i < this.zombiesEnJuego.length; i++) {
 			if (this.zombiesEnJuego[i] != null) {
 				ProyectilZombie p = this.zombiesEnJuego[i].tick(entorno, movPlantas);
@@ -57,18 +47,16 @@ public class ZombiesManejo {
 			}
 		}
 
-		// 3. MOVER PROYECTILES (Lógica "TUYA" conservada)
+		// Mueve los proyectiles de los zombies
 		for (int i = 0; i < this.proyectiles.length; i++) {
 			if (this.proyectiles[i] != null) {
 				this.proyectiles[i].mover();
-				if (this.proyectiles[i].getX() < 0) {
+				if (this.proyectiles[i].getX() < 0) { // Si sale de pantalla
 					this.proyectiles[i] = null;
 				}
 			}
 		}
 	}
-
-	// --- 4. TODO EL RESTO DE TU CÓDIGO SE CONSERVA INTACTO ---
 
 	public void dibujar(Entorno entorno) {
 		// Dibuja zombies
@@ -85,11 +73,13 @@ public class ZombiesManejo {
 		}
 	}
 
-	// Tu método para generar zombies de diferentes tipos
+	/**
+	 * Genera un zombie (70% normal, 30% rápido) en una fila aleatoria.
+	 */
 	private void generarZombie (Tablero tablero) {
 		int filaAleatoria = (int) (Math.random() * 5);
 		double y = tablero.getCentroCasilla (filaAleatoria, 0)[1];
-		double x = 850.0;
+		double x = 850.0; // Fuera de pantalla
 		ZombieGrinch nuevoZombie;
 		double chance = Math.random();
 		if (chance < 0.7) { // Normal
@@ -100,6 +90,9 @@ public class ZombiesManejo {
 		this.agregarZombie(nuevoZombie);
 	}
 
+	/**
+	 * Agrega un zombie al array en el primer espacio disponible.
+	 */
 	private boolean agregarZombie (ZombieGrinch zombie) {
 		for (int i = 0; i < this.zombiesEnJuego.length; i++){
 			if (this.zombiesEnJuego[i] == null) {
@@ -114,28 +107,24 @@ public class ZombiesManejo {
 		this.spawnsDetenidos = true;
 	}
 	
+	/**
+	 * Crea y añade al jefe final al juego.
+	 */
 	public ZombieGrinch generarJefeFinal(Tablero tablero) {
-		// La coordenada Y ahora estará en el centro vertical del área de juego del tablero
-		// El alto del área de juego es 'entorno.alto - tablero.getMenuHeight()'
+		// El jefe aparece centrado verticalmente en el tablero
 		double yCentroAreaJuego = tablero.getMenuHeight() + (tablero.getLargoCasilla() * tablero.getFilas() / 2.0);
+		double x = 850.0; // Fuera de pantalla
 		
-		// La posición X seguirá siendo un poco fuera de pantalla
-		double x = 850.0;
-		
-		// Calcular el alto de la zona de juego para que el jefe la abarque
+		// El hitbox del jefe ocupa toda el área vertical del tablero
 		double altoZonaJuego = tablero.getLargo_pantalla() - tablero.getMenuHeight();
 
-		// Nombre de la nueva imagen para el jefe final (¡debes crearla!)
-		String imagenJefe = "ZombieFinall.png"; // <-- ¡CAMBIA ESTO AL NOMBRE DE TU IMAGEN!
+		String imagenJefe = "ZombieFinall.png"; 
 		
-		// Ajustar las dimensiones y escala para que se vea grande y ocupe el alto.
-		// La escala se ajustará para que el alto de la imagen sea similar al 'altoZonaJuego'.
-		// Usaremos un alto base y un ancho base para la hitbox y ajustaremos la escala para el dibujo.
 		double anchoBaseHitbox = 100.0; 
-		double altoBaseHitbox = altoZonaJuego; // El alto de la hitbox es todo el alto del área de juego
-		double escalaDibujo = 0.5; // Ajusta este valor si tu imagen "BossZombie.png" es muy grande o muy pequeña inicialmente.
+		double altoBaseHitbox = altoZonaJuego;
+		double escalaDibujo = 0.5; // Ajustar escala de la imagen
 
-		// Vida: 300, Velocidad: 0.10, Retraso de disparo: 999999 (muy lento o no dispara)
+		// Vida: 300, Velocidad: 0.10, Retraso de disparo: 999999 (no dispara)
 		ZombieGrinch jefe = new ZombieGrinch(x, yCentroAreaJuego, 0.10, 300, imagenJefe, anchoBaseHitbox, altoBaseHitbox, escalaDibujo, 999999);
 		
 		this.agregarZombie(jefe);
@@ -144,7 +133,9 @@ public class ZombiesManejo {
 	
 	public ZombieGrinch[] getZombies() { return this.zombiesEnJuego; }
 
-	// Tu método que cuenta las muertes
+	/**
+	 * Remueve un zombie del array y suma al contador de muertes.
+	 */
 	public void removerZombie(int indice) {
 		if (indice >= 0 && indice < this.zombiesEnJuego.length) {
 			if (this.zombiesEnJuego[indice] != null) {
@@ -154,7 +145,8 @@ public class ZombiesManejo {
 		}
 	}
 
-	// Tus métodos para proyectiles
+	// --- Métodos de Proyectiles ---
+
 	private void agregarProyectil(ProyectilZombie p) {
 		for (int i = 0; i < this.proyectiles.length; i++) {
 			if (this.proyectiles[i] == null) {
@@ -172,17 +164,22 @@ public class ZombiesManejo {
 		}
 	}
 	
-	public void setJefeFinal(ZombieGrinch jefe) { // <-- ¡AÑADE ESTE MÉTODO!
+	public void setJefeFinal(ZombieGrinch jefe) {
 	    this.jefeFinalEnManejo = jefe;
 	}
 
-	// Tus métodos de estado
+	// --- Métodos de Estado ---
+	
 	public int getTotalAsesinados() { return this.zombiesMuertos; }
 
+	/**
+	 * Verifica si hay una amenaza (zombie o jefe) en una fila o área.
+	 * El jefe se considera una amenaza para todas las filas.
+	 */
 	public boolean hayZombieEnFila(double yFila, double limiteX) {
         for (int i = 0; i < this.zombiesEnJuego.length; i++) {
 	        ZombieGrinch z = this.zombiesEnJuego[i];
-	        if (z != null && z.estaVivo()) { // Quitamos la condición de yFila de aquí
+	        if (z != null && z.estaVivo()) { 
                 // Si el zombie actual es el jefe final Y está dentro del límite X
                 if (this.jefeFinalEnManejo != null && z == this.jefeFinalEnManejo && z.getX() <= limiteX) {
                     return true; // El jefe está presente y es una amenaza
